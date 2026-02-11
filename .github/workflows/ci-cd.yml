@@ -1,0 +1,32 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: AWS
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            git config --global --add safe.directory /home/ubuntu/
+            cd /home/ubuntu/website
+            git pull
+            git checkout main
+            cd /home/ubuntu/website/my-app
+            npm install
+            npm run build
+            cd /home/ubuntu/website/api
+            npm install
+            pm2 start server.js --name=backend
