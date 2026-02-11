@@ -17,14 +17,14 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd /home/ubuntu/website
+            cd /home/ubuntu/react-nodejs-example
             git pull origin master
             git checkout master
 
-            cd /home/ubuntu/website/my-app
+            cd /home/ubuntu/react-nodejs-example/my-app
             npm install
             npm run build
 
-            cd /home/ubuntu/website/api
+            cd /home/ubuntu/react-nodejs-example/api
             npm install
             pm2 restart backend || pm2 start server.js --name backend
