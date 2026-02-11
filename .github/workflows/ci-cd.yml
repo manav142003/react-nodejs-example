@@ -17,6 +17,9 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+            apt install nodejs -y
+
             cd /home/ubuntu/react-nodejs-example
             git pull origin master
             git checkout master
@@ -26,5 +29,6 @@ jobs:
             npm run build
 
             cd /home/ubuntu/react-nodejs-example/api
+            npm install pm2 -g
             npm install
             pm2 restart backend || pm2 start server.js --name backend
