@@ -7,25 +7,23 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: AWS
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
+          username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            git config --global --add safe.directory /home/ubuntu/website
             cd /home/ubuntu/website
-            git pull
-            git checkout mster
+            git pull origin master
+            git checkout master
+
             cd /home/ubuntu/website/my-app
+            npm install
             npm run build
+
             cd /home/ubuntu/website/api
             npm install
-            pm2 start server.js --name=backend
+            pm2 restart backend || pm2 start server.js --name backend
