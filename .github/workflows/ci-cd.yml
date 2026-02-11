@@ -23,7 +23,7 @@ jobs:
             git config --global --add safe.directory /home/ubuntu/website
             cd /home/ubuntu/website
             git pull
-            git checkout main
+            git checkout master
             cd /home/ubuntu/website/my-app
             npm install
             npm run build
